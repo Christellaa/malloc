@@ -10,7 +10,7 @@ CPPFLAGS := -Iincludes
 SRC_DIR := src
 OBJ_DIR := obj
 
-SOURCES := ft_malloc.c allocate.c zones.c utils.c
+SOURCES := ft_malloc.c allocate.c zones.c utils.c debug.c
 SRC := $(addprefix $(SRC_DIR)/,$(SOURCES))
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -28,7 +28,13 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f visualizer/allocator.json
 
 re: fclean all
 
-.PHONY: all clean fclean re
+debug: CFLAGS += -DDEBUG -g
+debug: all
+	./ft_malloc > visualizer/allocator.json
+	python -m http.server 8000
+
+.PHONY: all clean fclean re debug

@@ -21,9 +21,8 @@ void *create_zone(size_t block_size, size_t block_count) {
 	size_t bitmap_size = (block_count + 7) / 8;
 	// get raw size
 	// metadata + bitmap + blocks
-	size_t raw_size = sizeof(t_zone)
-		+ bitmap_size
-		+ block_size * block_count;
+	size_t metadata_size = align_block(sizeof(t_zone) + bitmap_size, ALIGNMENT);
+	size_t raw_size = metadata_size + block_size * block_count;
 	// get zone size
 	// mmap size is a multiple of page size
 	size_t zone_size = round_up(raw_size, pagesize);
@@ -46,7 +45,7 @@ void *create_zone(size_t block_size, size_t block_count) {
 	zone->bitmap = (unsigned char *)(zone + 1);
 	for (size_t i = 0; i < bitmap_size; i++)
 		zone->bitmap[i] = 0;
-	zone->first_block = (char *)zone + sizeof(t_zone) + zone->bitmap_size;
+	zone->first_block = (char *)zone + metadata_size;
 	zone->next = NULL;
 
 	return zone;

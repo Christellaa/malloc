@@ -84,10 +84,13 @@ void *allocate(
 void *allocate_large(size_t size, t_zone **zones) {
 	size_t pagesize = sysconf(_SC_PAGE_SIZE);
 
-	if (size > (SIZE_MAX - sizeof(t_zone)))
+	
+	size_t metadata_size = align_block(sizeof(t_zone), ALIGNMENT);
+
+	if (size > (SIZE_MAX - metadata_size))
 		return NULL;
 
-	size_t zone_size = round_up(sizeof(t_zone) + size, pagesize);
+	size_t zone_size = round_up(metadata_size + size, pagesize);
 	if (zone_size == 0)
 		return NULL;
 
@@ -104,10 +107,13 @@ void *allocate_large(size_t size, t_zone **zones) {
 
 	zone->zone_size = zone_size;
 	zone->block_size = size;
+	#ifdef DEBUG
+		zone->requested_size = size;
+	#endif
 	zone->block_count = 1;
 	zone->bitmap_size = 0;
 	zone->bitmap = NULL;
-	zone->first_block = (char *)zone + sizeof(t_zone);
+	zone->first_block = (char *)zone + metadata_size;
 	zone->next = NULL;
 
 	append_zone(zones, zone);

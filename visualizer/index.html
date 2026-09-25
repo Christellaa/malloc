@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ft_malloc Visualizer</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ft_malloc Visualizer</h1>
+        <p>Memory zones, blocks and allocations</p>
+    </header>
+
+    <main>
+        <section id="allocator-summary"></section>
+
+        <section>
+            <h2>Tiny</h2>
+            <div id="tiny-zones"></div>
+        </section>
+
+        <section>
+            <h2>Small</h2>
+            <div id="small-zones"></div>
+        </section>
+
+        <section>
+            <h2>Large</h2>
+            <div id="large-zones"></div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
